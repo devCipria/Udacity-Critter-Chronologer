@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.pet;
 
+import javax.persistence.Column;
 import java.time.LocalDate;
 
 /**
@@ -12,6 +13,7 @@ public class PetDTO {
     private String name;
     private long ownerId;
     private LocalDate birthDate;
+    @Column(length = 1000)
     private String notes;
 
     public PetType getType() {

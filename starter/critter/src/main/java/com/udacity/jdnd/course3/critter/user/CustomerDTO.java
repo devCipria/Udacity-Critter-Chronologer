@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import javax.persistence.Column;
 import java.util.List;
 
 /**
@@ -10,6 +11,7 @@ public class CustomerDTO {
     private long id;
     private String name;
     private String phoneNumber;
+    @Column(length = 1000)
     private String notes;
     private List<Long> petIds;
 
