@@ -13,7 +13,7 @@ import static com.udacity.jdnd.course3.critter.user.EmployeeSkill.*;
 @Entity
 public class Schedule {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ElementCollection
@@ -21,7 +21,7 @@ public class Schedule {
 
     private LocalDate date;
 
-    @ManyToMany
+    @ManyToMany(targetEntity = Pet.class)
     @JoinTable(
         name = "schedule_pet",
         joinColumns = @JoinColumn(name = "schedule_id"),
@@ -29,7 +29,7 @@ public class Schedule {
     )
     private List<Pet> petList;
 
-    @ManyToMany
+    @ManyToMany(targetEntity = Employee.class)
     @JoinTable(
             name = "schedule_employee",
             joinColumns = @JoinColumn(name = "schedule_id"),

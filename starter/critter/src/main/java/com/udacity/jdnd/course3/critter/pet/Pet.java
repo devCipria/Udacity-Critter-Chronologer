@@ -1,7 +1,6 @@
 package com.udacity.jdnd.course3.critter.pet;
 
 import com.udacity.jdnd.course3.critter.schedule.Schedule;
-import com.udacity.jdnd.course3.critter.schedule.ScheduleService;
 import com.udacity.jdnd.course3.critter.user.Customer;
 
 import javax.persistence.*;
@@ -12,10 +11,10 @@ import java.util.List;
 @Entity
 public class Pet {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private PetType petType;
+    private PetType type;
 
     private String name;
     private LocalDate birthDate;
@@ -23,11 +22,11 @@ public class Pet {
     @Column(length = 1000)
     private String notes;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Customer.class)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToMany
+    @ManyToMany(targetEntity = Schedule.class)
     private List<Schedule> scheduleList;
 
     public void addScheduleToScheduleList(Schedule schedule) {
@@ -40,9 +39,9 @@ public class Pet {
     // Constructors
     public Pet() {}
 
-    public Pet(Long id, PetType petType, String name, LocalDate birthDate, String notes, Customer customer, List<Schedule> scheduleList) {
+    public Pet(Long id, PetType type, String name, LocalDate birthDate, String notes, Customer customer, List<Schedule> scheduleList) {
         this.id = id;
-        this.petType = petType;
+        this.type = type;
         this.name = name;
         this.birthDate = birthDate;
         this.notes = notes;
@@ -59,12 +58,12 @@ public class Pet {
         this.id = id;
     }
 
-    public PetType getPetType() {
-        return petType;
+    public PetType getType() {
+        return type;
     }
 
-    public void setPetType(PetType petType) {
-        this.petType = petType;
+    public void setType(PetType petType) {
+        this.type = petType;
     }
 
     public String getName() {
