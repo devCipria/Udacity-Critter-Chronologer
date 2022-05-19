@@ -1,6 +1,5 @@
 package com.udacity.jdnd.course3.critter.user;
 
-import com.udacity.jdnd.course3.critter.pet.Pet;
 import com.udacity.jdnd.course3.critter.schedule.Schedule;
 import org.hibernate.annotations.Nationalized;
 
@@ -27,6 +26,7 @@ public class Employee {
 
     @ManyToMany(targetEntity = Schedule.class)
     private List<Schedule> scheduleList;
+
 
     public void addScheduleToScheduleList(Schedule schedule) {
         if (scheduleList == null) {

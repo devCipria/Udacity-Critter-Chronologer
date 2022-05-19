@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -76,12 +75,7 @@ public class UserController {
     public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
         Employee employee = employeeService.findEmployee(employeeId);
         employee.setDaysAvailable(daysAvailable);
-        // do I have to update anything; Bi-Directional relationships
-
-        // I have to save this back to the database;; Isn't better to merge it instead of saving; Doesn't feel right to
-        // access repository from controller.
         employeeService.save(employee);
-//        employeeRepository.save(employee);
     }
 
     @GetMapping("/employee/availability")
@@ -104,7 +98,6 @@ public class UserController {
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerDTO, customer);
 
-        // CustomerDTO may not contain a list of petIds yet -- add if statement
         List<Pet> petList = petService.findPetsByOwner(customer.getId());
         if (petList != null) {
             customer.setPetList(petList);

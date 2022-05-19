@@ -8,7 +8,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
 
-import static com.udacity.jdnd.course3.critter.user.EmployeeSkill.*;
 
 @Entity
 public class Schedule {

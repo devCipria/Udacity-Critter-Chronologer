@@ -54,14 +54,7 @@ public class ScheduleController {
 
     @GetMapping("/customer/{customerId}")
     public List<ScheduleDTO> getScheduleForCustomer(@PathVariable long customerId) {
-        // findPetsByOwner in petService -> returns a list of pets owned by a Customer
         List<Pet> petList = petService.findPetsByOwner(customerId);
-
-        // findScheduleListByPetId --> returns a list of schedules for a single pet -- must loop through this
-        // and add the scheduleList for each pet into a List variable called scheduleList -- convert this list into a DTO
-
-        // what if a customer doesn't have any pets?
-        // what if a pet doesn't have a schedule ?
 
         List<Schedule> scheduleList = new ArrayList<>();
 

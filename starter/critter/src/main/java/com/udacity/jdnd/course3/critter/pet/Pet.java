@@ -29,6 +29,9 @@ public class Pet {
     @ManyToMany(targetEntity = Schedule.class)
     private List<Schedule> scheduleList;
 
+    /* when you save a Schedule for a pet, you have to add the schedule to the pet's list of schedules.
+       Added to support bi-directional relationship between schedules and pets
+     */
     public void addScheduleToScheduleList(Schedule schedule) {
         if (scheduleList == null) {
             scheduleList = new ArrayList<>();
