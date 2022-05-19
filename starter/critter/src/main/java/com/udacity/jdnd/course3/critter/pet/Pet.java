@@ -1,10 +1,12 @@
 package com.udacity.jdnd.course3.critter.pet;
 
 import com.udacity.jdnd.course3.critter.schedule.Schedule;
+import com.udacity.jdnd.course3.critter.schedule.ScheduleService;
 import com.udacity.jdnd.course3.critter.user.Customer;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,6 +29,13 @@ public class Pet {
 
     @ManyToMany
     private List<Schedule> scheduleList;
+
+    public void addScheduleToScheduleList(Schedule schedule) {
+        if (scheduleList == null) {
+            scheduleList = new ArrayList<>();
+        }
+        scheduleList.add(schedule);
+    }
 
     // Constructors
     public Pet() {}

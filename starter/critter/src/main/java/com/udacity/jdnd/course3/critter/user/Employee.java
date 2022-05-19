@@ -5,7 +5,7 @@ import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
 import java.time.DayOfWeek;
-import java.util.EnumSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +26,13 @@ public class Employee {
 
     @ManyToMany
     private List<Schedule> scheduleList;
+
+    public void addScheduleToScheduleList(Schedule schedule) {
+        if (scheduleList == null) {
+            scheduleList = new ArrayList<>();
+        }
+        scheduleList.add(schedule);
+    }
 
 //    Constructors
     public Employee(){}
