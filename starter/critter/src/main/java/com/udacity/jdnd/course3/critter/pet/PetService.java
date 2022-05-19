@@ -6,12 +6,14 @@ import com.udacity.jdnd.course3.critter.user.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @Service
+@Transactional
 public class PetService {
 
     @Autowired

@@ -4,9 +4,11 @@ import com.udacity.jdnd.course3.critter.pet.Pet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class CustomerService {
 
     @Autowired
@@ -19,16 +21,5 @@ public class CustomerService {
     public List<Customer> findAllCustomers() {
         return customerRepository.findAll();
     }
-
-//    public Customer findCustomerByPetId(Long petId) {
-//        return customerRepository.findCustomerByPetId(petId);
-//    }
-
-//    public Customer findCustomerByPet(long petId) {
-//        return customerRepository.
-//    }
-
-
-
 
 }
