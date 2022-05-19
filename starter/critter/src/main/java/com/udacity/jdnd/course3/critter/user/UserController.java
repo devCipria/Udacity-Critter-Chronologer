@@ -1,8 +1,14 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.pet.Pet;
+import com.udacity.jdnd.course3.critter.pet.PetService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,39 +22,125 @@ import java.util.Set;
 @RequestMapping("/user")
 public class UserController {
 
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private PetService petService;
+
+    @Autowired
+    private EmployeeService employeeService;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-        throw new UnsupportedOperationException();
+        Customer customer = customerService.save(convertCustomerDTOToEntity(customerDTO));
+        CustomerDTO savedCustomerDTO = convertEntityToCustomerDTO(customer);
+        return savedCustomerDTO;
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        throw new UnsupportedOperationException();
+        List<Customer> customerList = customerService.findAllCustomers();
+        List<CustomerDTO> customerDTOList = new ArrayList<>();
+
+        for (Customer c : customerList) {
+            customerDTOList.add(convertEntityToCustomerDTO(c));
+        }
+        return customerDTOList;
     }
 
     @GetMapping("/customer/pet/{petId}")
-    public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        throw new UnsupportedOperationException();
+    public CustomerDTO getOwnerByPet(@PathVariable Long petId){
+        Customer customer = petService.findCustomerByPetId(petId);
+        return convertEntityToCustomerDTO(customer);
     }
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+        Employee employee = employeeService.save(convertEmployeeDTOToEntity(employeeDTO));
+        EmployeeDTO savedEmployeeDTO = convertEntityToEmployeeDTO(employee);
+
+        return savedEmployeeDTO;
     }
 
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+        return convertEntityToEmployeeDTO(employeeService.findEmployee(employeeId));
     }
 
     @PutMapping("/employee/{employeeId}")
     public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+        Employee employee = employeeService.findEmployee(employeeId);
+        employee.setDaysAvailable(daysAvailable);
+        // do I have to update anything; Bi-Directional relationships
+
+        // I have to save this back to the database;; Isn't better to merge it instead of saving; Doesn't feel right to
+        // access repository from controller.
+        employeeService.save(employee);
+//        employeeRepository.save(employee);
     }
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        Set<EmployeeSkill> skills = employeeDTO.getSkills();
+        DayOfWeek dayOfWeek = employeeDTO.getDate().getDayOfWeek();
+
+        // search for employee in the DB, that contains skills and dayOfWeek
+        List<Employee> availableEmployeeList = employeeService.findAvailableEmployees(skills, dayOfWeek);
+        List<EmployeeDTO> availableEmployeeDTOList = new ArrayList<>();
+
+        for (Employee employee : availableEmployeeList) {
+            availableEmployeeDTOList.add(convertEntityToEmployeeDTO(employee));
+        }
+
+        return availableEmployeeDTOList;
+    }
+
+    private Customer convertCustomerDTOToEntity(CustomerDTO customerDTO) {
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerDTO, customer);
+
+        // CustomerDTO may not contain a list of petIds yet -- add if statement
+        List<Pet> petList = petService.findPetsByOwner(customer.getId());
+        if (petList != null) {
+            customer.setPetList(petList);
+        }
+
+        return customer;
+    }
+
+    private CustomerDTO convertEntityToCustomerDTO(Customer customer) {
+        CustomerDTO customerDTO = new CustomerDTO();
+        BeanUtils.copyProperties(customer, customerDTO );
+
+        List<Long> petIdList = new ArrayList<>();
+
+        List<Pet> petList = customer.getPetList();
+
+        if (petList != null) {
+            for (Pet p : petList) {
+                petIdList.add(p.getId());
+            }
+            customerDTO.setPetIds(petIdList);
+        }
+
+        return customerDTO;
+    }
+
+    private Employee convertEmployeeDTOToEntity(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+        return employee;
+    }
+
+    private EmployeeDTO convertEntityToEmployeeDTO(Employee employee) {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        BeanUtils.copyProperties(employee, employeeDTO);
+        return employeeDTO;
     }
 
 }
